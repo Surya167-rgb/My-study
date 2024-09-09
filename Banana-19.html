@@ -523,7 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div  class="otpContent_second" id ="second_text">
          <p> OTP has been sent to the registered mobile number <span style="font-weight: 600;color: var(--gray-gray-7-primary, #2A2B2F);">XXXXXX%%MOBILE%%</span> and valid for 5 minutes.</p>
         </div>            
-         <div class="otpInput">
+         <div class="otpInput" autocomplete="one-time-code" inputmode="numeric">
          
 <input type="text" minlength="1" maxlength="1" name="input1" id="first" class="input mar" />
 <input type="text" minlength="1" maxlength="1" name="input2" id="second" class="input mar" />
