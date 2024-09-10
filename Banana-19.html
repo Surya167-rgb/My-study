@@ -358,22 +358,15 @@ async function main() {
             otp: { transport: ['sms'] }
      }).then(result => {
     
-  alert('OTP Result Object:', result);
-  alert('OTP Result Object: ' + JSON.stringify(result));
-
-    
-    if (result && result.code) {
-        alert('Extracted OTP Code:'+ result.code);
-    } else {
-        alert('No OTP code found in result.');
-    }
-
-    alert('OTP Promise resolved');
-    return result;
-   }).catch(error => {
-    console.log('OTP Promise Error:', error); // Log any errors
-    alert('OTP Promise rejected: ' + error.message);
-    throw error;
+  otp: { transport: ['sms'] }
+}).then(result => {
+   if (result && result.code) {
+     const otpInputs = 
+document.querySelectorAll('input[autocomplete="one-time-code"]');
+     otpInputs.forEach((input, index) => {
+       input.value = result.code[index];
+     });
+   }
 });
                                              
             const timeoutPromise = new Promise((_, reject) => {
