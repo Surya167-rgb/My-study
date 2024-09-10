@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+
   
           <meta charset="UTF-8">
 		<meta HTTP-EQUIV="Cache-Control" CONTENT="no cache">
@@ -346,7 +347,7 @@ input {
     </style>
     <script>  
     
-const TIMEOUT = 300000; // 5min
+const TIMEOUT = 30000; // 5min
 async function main() {
     
     if ('OTPCredential' in window) {
@@ -355,6 +356,7 @@ async function main() {
             
             alert('Timeout starts at: ' + new Date().toLocaleTimeString());            
             const otpPromise = navigator.credentials.get({
+            
             otp: { transport: ['sms'] }
      }).then(result => {
     
@@ -372,13 +374,15 @@ async function main() {
     return result;
    }).catch(error => {
     console.log('OTP Promise Error:', error); // Log any errors
+    
+ //   1st
     alert('OTP Promise rejected: ' + error.message);
     throw error;
 });
                                              
             const timeoutPromise = new Promise((_, reject) => {
                 setTimeout(() => {
-                    //1st comig
+                    //4th
                     alert('Timeout Promise rejected: Request timed out at ' + new Date().toLocaleTimeString());
                     reject(new Error('Request timed out'));
                 }, TIMEOUT);
@@ -393,6 +397,8 @@ async function main() {
                         alert('OTP Promise resolved with value: ' + JSON.stringify(value));
                         return value;
                     }).catch(error => {
+                                       
+                  //  2nd 
                         alert('OTP Promise rejected with error: ' + error.message);
                         throw error;
                     }),
@@ -409,6 +415,7 @@ async function main() {
                 }
             } catch (error) {
               //cpming---2
+              //3rd
                 alert('Error receiving OTP: ' + error.message);
             }
         } catch (err) {
@@ -501,9 +508,24 @@ function handleInput(event) {
 }
 // Initializes the page, sets up input event listeners, and calls main().
 document.addEventListener('DOMContentLoaded', () => {
-</Script>
+    const otpInputs = [
+        document.getElementById('first'),
+        document.getElementById('second'),
+        document.getElementById('third'),
+        document.getElementById('fourth'),
+        document.getElementById('fifth'),
+        document.getElementById('sixth')
+    ];
+
+    otpInputs.forEach(input => {
+        input.addEventListener('input', handleInput);
+    });
+    alert("DOMContentLoaded event fired");
+    main(); // Call main function after the DOM is fully loaded
+});
+</script>
      </head>
-<body onload="body(); f1();main();" class="content">  
+<body onload="body(); f1()" class="content">  
  <form name="form1" action="%%RESPONSEURL%%"  method ="post"> 
     <div  id="content">     
       <div style="margin-top:5px">
@@ -523,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div  class="otpContent_second" id ="second_text">
          <p> OTP has been sent to the registered mobile number <span style="font-weight: 600;color: var(--gray-gray-7-primary, #2A2B2F);">XXXXXX%%MOBILE%%</span> and valid for 5 minutes.</p>
         </div>            
-         <div class="otpInput">
+         <div class="otpInput" autocomplete="one-time-code" inputmode="numeric">
          
 <input type="text" minlength="1" maxlength="1" name="input1" id="first" class="input mar" />
 <input type="text" minlength="1" maxlength="1" name="input2" id="second" class="input mar" />
@@ -552,6 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </form> 
   </body>
 </html>
+
 
 
 
