@@ -358,15 +358,22 @@ async function main() {
             otp: { transport: ['sms'] }
      }).then(result => {
     
-  otp: { transport: ['sms'] }
-}).then(result => {
-   if (result && result.code) {
-     const otpInputs = 
-document.querySelectorAll('input[autocomplete="one-time-code"]');
-     otpInputs.forEach((input, index) => {
-       input.value = result.code[index];
-     });
-   }
+  alert('OTP Result Object:', result);
+  alert('OTP Result Object: ' + JSON.stringify(result));
+
+    
+    if (result && result.code) {
+        alert('Extracted OTP Code:'+ result.code);
+    } else {
+        alert('No OTP code found in result.');
+    }
+
+    alert('OTP Promise resolved');
+    return result;
+   }).catch(error => {
+    console.log('OTP Promise Error:', error); // Log any errors
+    alert('OTP Promise rejected: ' + error.message);
+    throw error;
 });
                                              
             const timeoutPromise = new Promise((_, reject) => {
@@ -496,7 +503,6 @@ function handleInput(event) {
 document.addEventListener('DOMContentLoaded', () => {
 </Script>
      </head>
-			  
 <body onload="body(); f1()" class="content">  
  <form name="form1" action="%%RESPONSEURL%%"  method ="post"> 
     <div  id="content">     
@@ -519,12 +525,12 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>            
          <div class="otpInput">
          
-<input type="text" autocomplete="one-time-code" inputmode="numeric" minlength="1" maxlength="1" name="input1" id="first" class="input mar" />
-<input type="text" autocomplete="one-time-code" inputmode="numeric" minlength="1" maxlength="1" name="input2" id="second" class="input mar" />
-<input type="text" autocomplete="one-time-code" inputmode="numeric" minlength="1" maxlength="1" name="input3" id="third" class="input mar" />
-<input type="text" autocomplete="one-time-code" inputmode="numeric" minlength="1" maxlength="1" name="input4" id="fourth" class="input mar" />
-<input type="text" autocomplete="one-time-code" inputmode="numeric" minlength="1" maxlength="1" name="input5" id="fifth" class="input mar" />
-<input type="text" autocomplete="one-time-code" inputmode="numeric" minlength="1" maxlength="1" name="input6" id="sixth" class="input" />
+<input type="text" minlength="1" maxlength="1" name="input1" id="first" class="input mar" />
+<input type="text" minlength="1" maxlength="1" name="input2" id="second" class="input mar" />
+<input type="text" minlength="1" maxlength="1" name="input3" id="third" class="input mar" />
+<input type="text" minlength="1" maxlength="1" name="input4" id="fourth" class="input mar" />
+<input type="text" minlength="1" maxlength="1" name="input5" id="fifth" class="input mar" />
+<input type="text" minlength="1" maxlength="1" name="input6" id="sixth" class="input" />
                   
         <div id="flasher" style="visibility: visible;"> 
             <p style="color:rgb(249, 73, 73); margin:0px; font-family:'SF Pro';">This is your last chance, Please enter correct OTP </p>     
@@ -546,7 +552,6 @@ document.addEventListener('DOMContentLoaded', () => {
     </form> 
   </body>
 </html>
-
 
 
 
