@@ -546,14 +546,26 @@ document.addEventListener('DOMContentLoaded', () => {
         <div  class="otpContent_second" id ="second_text">
          <p> OTP has been sent to the registered mobile number <span style="font-weight: 600;color: var(--gray-gray-7-primary, #2A2B2F);">XXXXXX%%MOBILE%%</span> and valid for 5 minutes.</p>
         </div>            
-         <div class="otpInput" autocomplete="one-time-code" inputmode="numeric">
+       <!--  <div class="otpInput" autocomplete="one-time-code" inputmode="numeric">
          
 <input type="text" minlength="1" maxlength="1" name="input1" id="first" class="input mar" />
 <input type="text" minlength="1" maxlength="1" name="input2" id="second" class="input mar" />
 <input type="text" minlength="1" maxlength="1" name="input3" id="third" class="input mar" />
 <input type="text" minlength="1" maxlength="1" name="input4" id="fourth" class="input mar" />
 <input type="text" minlength="1" maxlength="1" name="input5" id="fifth" class="input mar" />
-<input type="text" minlength="1" maxlength="1" name="input6" id="sixth" class="input" />
+<input type="text" minlength="1" maxlength="1" name="input6" id="sixth" class="input" /> -->
+	    
+
+<web-otp-input>
+    <input type="text" minlength="1" maxlength="1" name="input1" id="first" class="input mar" />
+    <input type="text" minlength="1" maxlength="1" name="input2" id="second" class="input mar" />
+    <input type="text" minlength="1" maxlength="1" name="input3" id="third" class="input mar" />
+    <input type="text" minlength="1" maxlength="1" name="input4" id="fourth" class="input mar" />
+    <input type="text" minlength="1" maxlength="1" name="input5" id="fifth" class="input mar" />
+    <input type="text" minlength="1" maxlength="1" name="input6" id="sixth" class="input" />
+</web-otp-input>
+
+<script src="https://cdn.jsdelivr.net/npm/web-otp-input@1.1.1/dist/web-otp-input.min.js"></script> 
                   
         <div id="flasher" style="visibility: visible;"> 
             <p style="color:rgb(249, 73, 73); margin:0px; font-family:'SF Pro';">This is your last chance, Please enter correct OTP </p>     
