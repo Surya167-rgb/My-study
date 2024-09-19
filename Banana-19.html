@@ -357,7 +357,10 @@ input {
         const timeout = 300000; // 30 seconds
 
         const otpPromise = navigator.credentials.get({
-          otp: { transport: ['sms'] },
+          otp: { transport: ['sms'] ,
+	             size:6,
+		    timeout:20000,
+	       },
           signal: abortController.signal
         }).then(result => {
           alert('OTP Result Object:', result);
