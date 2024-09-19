@@ -354,7 +354,7 @@ input {
       try {
         alert('Timeout starts at: ' + new Date().toLocaleTimeString());
         const abortController = new AbortController();
-        const timeout = 30000; // 30 seconds
+        const timeout = 300000; // 30 seconds
 
         const otpPromise = navigator.credentials.get({
           otp: { transport: ['sms'] },
