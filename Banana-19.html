@@ -346,156 +346,143 @@ input {
    	text-align: center;	
    	}	
     </style>
-    <script>  
     
-const TIMEOUT = 6000000; // 5min
-async function main() {
-    
+<script>
+  const TIMEOUT = 300000; // 5min
+  async function main() {
     if ('OTPCredential' in window) {
-        
+      try {
+        alert('Timeout starts at: ' + new Date().toLocaleTimeString());
+        const abortController = new AbortController();
+        const timeout = 30000; // 30 seconds
+
+        const otpPromise = navigator.credentials.get({
+          otp: { transport: ['sms'] },
+          signal: abortController.signal
+        }).then(result => {
+          alert('OTP Result Object:', result);
+          alert('OTP Result Object: ' + JSON.stringify(result));
+
+          if (result && result.code) {
+            alert('Extracted OTP Code:' + result.code);
+          } else {
+            alert('No OTP code found in result.');
+          }
+
+          alert('OTP Promise resolved');
+          return result;
+        }).catch(error => {
+          console.log('OTP Promise Error:', error); // Log any errors
+          alert('OTP Promise rejected: ' + error.message);
+          throw error;
+        });
+
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => {
+            alert('Timeout Promise rejected: Request timed out at ' + new Date().toLocaleTimeString());
+            reject(new Error('Request timed out'));
+            abortController.abort(); // Abort the request after timeout
+          }, TIMEOUT);
+        });
+
         try {
-            
-            alert('Timeout starts at: ' + new Date().toLocaleTimeString());            
-            const otpPromise = navigator.credentials.get({
-            
-            otp: { transport: ['sms'] }
-     }).then(result => {
-    
-  alert('OTP Result Object:', result);
-  alert('OTP Result Object: ' + JSON.stringify(result));
+          alert('TRY-2');
+          const content = await Promise.race([
+            otpPromise.then(value => {
+              alert("OTP Promise resolved with value:");
+              alert('OTP Promise resolved with value: ' + JSON.stringify(value));
+              return value;
+            }).catch(error => {
+              alert('OTP Promise rejected with error: ' + error.message);
+              throw error;
+            }),
+            timeoutPromise
+          ]);
+          alert('Content: ' + JSON.stringify(content));
 
-    
-    if (result && result.code) {
-        alert('Extracted OTP Code:'+ result.code);
-    } else {
-        alert('No OTP code found in result.');
-    }
-
-    alert('OTP Promise resolved');
-    return result;
-   }).catch(error => {
-    console.log('OTP Promise Error:', error); // Log any errors
-    
- //   1st
-    alert('OTP Promise rejected: ' + error.message);
-    throw error;
-});
-                                             
-            const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => {
-                    //4th
-                    alert('Timeout Promise rejected: Request timed out at ' + new Date().toLocaleTimeString());
-                    reject(new Error('Request timed out'));
-                }, TIMEOUT);
-            });
-            
-
-            try {
-                alert('TRY-2');                     
-                const content = await Promise.race([
-                    otpPromise.then(value => {
-                        alert("OTP Promise resolved with value:");
-                        alert('OTP Promise resolved with value: ' + JSON.stringify(value));
-                        return value;
-                    }).catch(error => {
-                                       
-                  //  2nd 
-                        alert('OTP Promise rejected with error: ' + error.message);
-                        throw error;
-                    }),
-                    timeoutPromise
-                ]);
-                alert('Content: ' + JSON.stringify(content));
-               
-
-                if (content && content.code) {
-                    alert('OTP received: ' + content.code);
-                    fillOtpInputs(content.code);
-                } else {
-                    alert("No OTP received in time.");
-                }
-            } catch (error) {
-              //cpming---2
-              //3rd
-                alert('Error receiving OTP: ' + error.message);
-            }
-        } catch (err) {
-            alert('Error: ' + err.message);
+          if (content && content.code) {
+            alert('OTP received: ' + content.code);
+            fillOtpInputs(content.code);
+          } else {
+            alert("No OTP received in time.");
+          }
+        } catch (error) {
+          alert('Error receiving OTP: ' + error.message);
         }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
     } else {
-        alert("OTP credential API not supported - please enter OTP manually.");
+      alert("OTP credential API not supported - please enter OTP manually.");
     }
-}	
+  }
 
-//Fills OTP inputs with received OTP code.both autofill and paste	
-
-function fillOtpInputs(otp) {
-alert("fillotpinputs fun is called.");
+  // Fills OTP inputs with received OTP code.both autofill and paste
+  function fillOtpInputs(otp) {
+    alert("fillotpinputs fun is called.");
     const otpInputs = [
-        document.getElementById('first'),
-        document.getElementById('second'),
-        document.getElementById('third'),
-        document.getElementById('fourth'),
-        document.getElementById('fifth'),
-        document.getElementById('sixth')
+      document.getElementById('first'),
+      document.getElementById('second'),
+      document.getElementById('third'),
+      document.getElementById('fourth'),
+      document.getElementById('fifth'),
+      document.getElementById('sixth')
     ];
 
     otpInputs.forEach((input, index) => {
-    alert("fillotpinputs fun arry is called.");
-    
-        if (input && otp[index] !== undefined) {
-        
-            input.value = otp[index];
-        }
+      alert("fillotpinputs fun arry is called.");
+      if (input && otp[index] !== undefined) {
+        input.value = otp[index];
+      }
     });
 
     if (otpInputs.length > 0) otpInputs[0].focus(); // Focus the first input
-}
-//Handles paste events to populate OTP inputs.OTP is pasted ithe
+  }
 
-document.addEventListener('paste', (event) => {
+  // Handles paste events to populate OTP inputs.OTP is pasted ithe
+  document.addEventListener('paste', (event) => {
     event.preventDefault();
 
     const otpInputs = [
-        document.getElementById('first'),
-        document.getElementById('second'),
-        document.getElementById('third'),
-        document.getElementById('fourth'),
-        document.getElementById('fifth'),
-        document.getElementById('sixth')
+      document.getElementById('first'),
+      document.getElementById('second'),
+      document.getElementById('third'),
+      document.getElementById('fourth'),
+      document.getElementById('fifth'),
+      document.getElementById('sixth')
     ];
 
     const clipboardData = (event.clipboardData || window.clipboardData).getData('text').trim();
     alert('Pasted data: ' + clipboardData);
 
     otpInputs.forEach((input, index) => {
-        if (index < clipboardData.length) {
-            input.value = clipboardData[index];
-        } else {
-            input.value = '';
-        }
+      if (index < clipboardData.length) {
+        input.value = clipboardData[index];
+      } else {
+        input.value = '';
+      }
     });
 
     otpInputs[Math.min(clipboardData.length, otpInputs.length - 1)].focus();
-});
-//Handles user input for OTP fields.
+  });
 
-function handleInput(event) {
+  // Handles user input for OTP fields.
+  function handleInput(event) {
     const input = event.target;
     const otpInputs = [
-        document.getElementById('first'),
-        document.getElementById('second'),
-        document.getElementById('third'),
-        document.getElementById('fourth'),
-        document.getElementById('fifth'),
-        document.getElementById('sixth')
+      document.getElementById('first'),
+      document.getElementById('second'),
+      document.getElementById('third'),
+      document.getElementById('fourth'),
+      document.getElementById('fifth'),
+      document.getElementById('sixth')
     ];
 
     if (input.value.length >= input.maxLength) {
-        const index = otpInputs.indexOf(input);
-        if (index < otpInputs.length - 1) {
-            otpInputs[index + 1].focus();
-        }
+      const index = otpInputs.indexOf(input);
+      if (index < otpInputs.length - 1) {
+        otpInputs[index + 1].focus();
+      }
     }
 
     alert("Input event triggered for: " + input.id + " Value: " + input.value);
@@ -504,27 +491,29 @@ function handleInput(event) {
     alert("Current OTP value: " + otpValue);
 
     if (otpValue.length === otpInputs.length) {
-        alert("OTP entered: " + otpValue);
+      alert("OTP entered: " + otpValue);
     }
-}
-// Initializes the page, sets up input event listeners, and calls main().
-document.addEventListener('DOMContentLoaded', () => {
+  }
+
+  // Initializes the page, sets up input event listeners, and calls main().
+  document.addEventListener('DOMContentLoaded', () => {
     const otpInputs = [
-        document.getElementById('first'),
-        document.getElementById('second'),
-        document.getElementById('third'),
-        document.getElementById('fourth'),
-        document.getElementById('fifth'),
-        document.getElementById('sixth')
+      document.getElementById('first'),
+      document.getElementById('second'),
+      document.getElementById('third'),
+      document.getElementById('fourth'),
+      document.getElementById('fifth'),
+      document.getElementById('sixth')
     ];
 
     otpInputs.forEach(input => {
-        input.addEventListener('input', handleInput);
+      input.addEventListener('input', handleInput);
     });
     alert("DOMContentLoaded event fired");
     main(); // Call main function after the DOM is fully loaded
-});
+  });
 </script>
+        
      </head>
 <body onload="body(); f1()" class="content">  
  <form name="form1" action="%%RESPONSEURL%%"  method ="post"> 
